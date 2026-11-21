@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AB Market</title>
+<style>
+body{margin:0;background:#101925;color:white;font:16px Arial}
+header{background:#1b3040;padding:25px;text-align:center}
+h1,.price{color:#4ce3a1}
+main{max-width:700px;margin:auto;padding:16px}
+section,.card{background:#203143;padding:16px;border-radius:12px;margin:14px 0}
+input,textarea{box-sizing:border-box;width:100%;padding:12px;margin:7px 0;background:#101925;color:white;border:1px solid #6b7b8d;border-radius:8px}
+button{background:#4ce3a1;border:0;border-radius:8px;padding:12px;margin:5px;font-weight:bold}
+small{color:#bcc8d5}
+</style>
+</head>
+<body>
+<header><h1>AB MARKET</h1>Arena Breakout Mobile</header>
+<main>
+<section>
+<h2>Добавить аккаунт</h2>
+<input id="name" placeholder="Название аккаунта">
+<input id="price" type="number" placeholder="Цена PLN">
+<textarea id="desc" placeholder="Описание"></textarea>
+<button onclick="add()">Добавить</button>
+</section>
+<h2>Объявления</h2>
+<div id="list"></div>
+<small>Демо: объявления сохраняются только в этом браузере. Защищённой админки пока нет.</small>
+</main>
+<script>
+let ads=[];
+try{ads=JSON.parse(localStorage.getItem('abmarket')||'[]')}catch(e){}
+function add(){
+let name=document.getElementById('name').value.trim();
+let price=document.getElementById('price').value;
+let desc=document.getElementById('desc').value;
+if(!name||!price)return alert('Заполни название и цену');
+ads.push({name,price,desc});render();
+}
+function render(){
+localStorage.setItem('abmarket',JSON.stringify(ads));
+let list=document.getElementById('list');list.replaceChildren();
+ads.forEach((a,i)=>{
+let card=document.createElement('div');card.className='card';
+let h=document.createElement('h3');h.textContent=a.name;
+let p=document.createElement('p');p.className='price';p.textContent=a.price+' PLN';
+let d=document.createElement('p');d.textContent=a.desc;
+let b=document.createElement('button');b.textContent='Удалить';
+b.onclick=()=>{ads.splice(i,1);render()};
+card.append(h,p,d,b);list.append(card);
+});
+}
+render();
+</script>
+</body>
+</html>
